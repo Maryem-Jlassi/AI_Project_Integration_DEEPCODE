@@ -1,0 +1,58 @@
+<div class="chat-container" #chatContainer>
+    <div class="messages-container">
+      <div *ngFor="let message of messages" 
+           [ngClass]="{'message': true, 'user-message': message.isUser, 'bot-message': !message.isUser}">
+        <div class="message-content">
+          <p>{{ message.content }}</p>
+          <div *ngIf="message.sources && message.sources.length > 0 && showSources" class="sources">
+            <p class="sources-title">Sources:</p>
+            <ul>
+              <li *ngFor="let source of message.sources">{{ source }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="message-timestamp">{{ message.timestamp | date:'HH:mm' }}</div>
+      </div>
+      <div *ngIf="isLoading" class="loading-indicator">
+        <div class="dot-flashing"></div>
+      </div>
+    </div>
+    
+    <div class="controls-container">
+      <div class="upload-container">
+        <button class="icon-button" (click)="audioFileInput.click()" title="Importer un document">
+          <i class="fas fa-file-upload"></i>
+        </button>
+        <input #audioFileInput type="file" 
+               accept=".pdf,.docx,.txt" 
+               (change)="uploadFile($event)" 
+               style="display: none;">
+      </div>
+      
+      <div class="sources-toggle" *ngIf="hasMessagesWithSources()">
+        <button class="text-button" (click)="toggleSources()">
+          {{ showSources ? 'Masquer les sources' : 'Afficher les sources' }}
+        </button>
+      </div>
+      
+      <div class="input-container">
+        <input type="text" 
+               [formControl]="questionInput" 
+               placeholder="Posez votre question..." 
+               (keyup.enter)="sendQuestion()">
+        
+        <button class="icon-button" 
+                [class.recording]="isRecording"
+                (mousedown)="startRecording()" 
+                (mouseup)="stopRecording()"
+                (mouseleave)="stopRecording()"
+                title="Maintenir pour parler">
+          <i class="fas fa-microphone"></i>
+        </button>
+        
+        <button class="icon-button send-button" (click)="sendQuestion()">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,61 @@
+# Innovation et R&D chez ACTIA
+
+## Notre engagement envers l'innovation
+
+L'innovation est au cœur de la stratégie d'ACTIA. Nous investissons environ 15% de notre chiffre d'affaires en R&D chaque année, ce qui nous permet de rester à la pointe de la technologie et de proposer des solutions innovantes à nos clients.
+
+## Centres de R&D
+
+ACTIA dispose de plusieurs centres de R&D dans le monde entier :
+- Centre principal à Toulouse, France
+- Centres régionaux en Allemagne, Espagne, États-Unis et Chine
+- Laboratoires spécialisés en électronique de puissance, communications sans fil et systèmes embarqués
+
+Nos équipes R&D comptent plus de 1 000 ingénieurs et techniciens spécialisés.
+
+## Domaines d'innovation
+
+### Mobilité électrique
+- Systèmes de gestion de batterie (BMS)
+- Convertisseurs de puissance pour véhicules électriques
+- Solutions de recharge intelligente
+- Optimisation de l'autonomie des véhicules électriques
+
+### Véhicules connectés et autonomes
+- Systèmes télématiques avancés
+- Communications V2X (Vehicle-to-Everything)
+- Assistance à la conduite
+- Architecture électronique et logicielle pour véhicules autonomes
+
+### Diagnostics avancés
+- Outils de diagnostic multimarques
+- Solutions de maintenance prédictive
+- Diagnostics à distance
+- Intelligence artificielle appliquée au diagnostic
+
+### Cybersécurité
+- Protection des communications véhiculaires
+- Sécurisation des systèmes embarqués
+- Authentification et certification des composants
+- Détection d'intrusion pour systèmes véhiculaires
+
+## Partenariats et écosystème d'innovation
+
+ACTIA collabore avec de nombreux partenaires pour stimuler l'innovation :
+- Universités et centres de recherche
+- Start-ups innovantes
+- Grands groupes industriels
+- Pôles de compétitivité
+- Programmes européens de recherche
+
+## Brevets et propriété intellectuelle
+
+ACTIA dispose d'un portefeuille significatif de brevets couvrant ses principales technologies. Le groupe dépose régulièrement de nouveaux brevets pour protéger ses innovations et maintenir son avantage concurrentiel.
+
+## Approche d'innovation ouverte
+
+ACTIA pratique l'innovation ouverte, collaborant avec des partenaires externes pour accélérer le développement de nouvelles solutions. Cette approche nous permet de :
+- Réduire le temps de mise sur le marché
+- Intégrer des technologies complémentaires
+- Partager les risques et les investissements
+- Accéder à des compétences diversifiées

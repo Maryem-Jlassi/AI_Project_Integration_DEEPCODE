@@ -1,0 +1,67 @@
+# Technologies utilisées chez ACTIA
+
+## Stack technologique
+
+### Développement logiciel
+- Langages de programmation : C, C++, Java, Python, JavaScript
+- Frameworks pour systèmes embarqués : AUTOSAR, QNX
+- Environnements de développement : Eclipse, Visual Studio, Qt Creator
+- Systèmes d'exploitation embarqués : Linux embarqué, FreeRTOS, VxWorks
+
+### Développement électronique
+- Conception de circuits : Altium Designer, Cadence, OrCAD
+- Simulation électronique : SPICE, Simulink
+- Prototypage rapide : FPGA, Arduino, Raspberry Pi
+- Conception de PCB multi-couches haute densité
+
+### Technologies Cloud et Connectivité
+- Plateformes cloud : AWS, Azure
+- Protocoles IoT : MQTT, CoAP, LwM2M
+- Connectivité sans fil : 4G/5G, Bluetooth, Wi-Fi, LoRa
+- Protocoles véhiculaires : CAN, LIN, FlexRay, Ethernet automobile
+
+### Data Science et Intelligence Artificielle
+- Frameworks ML/AI : TensorFlow, PyTorch, scikit-learn
+- Traitement de données massives : Hadoop, Spark
+- Visualisation de données : PowerBI, Tableau, D3.js
+- Edge Computing et inférence embarquée
+
+## Outils et méthodes
+
+### Gestion de projet
+- Méthodologies agiles : Scrum, SAFe
+- Gestion de projet : Jira, Microsoft Project
+- Collaboration : Confluence, Microsoft Teams
+- Gestion des exigences : Doors, Polarion
+
+### Qualité et tests
+- Tests automatisés : Jenkins, Robot Framework
+- Revue de code : Gerrit, GitHub
+- Intégration continue : GitLab CI/CD, GitHub Actions
+- Analyse statique : SonarQube, Coverity
+
+### Fabrication et production
+- Conception pour la fabrication (DFM)
+- Tests in-situ et fonctionnels
+- Traçabilité des composants
+- Lignes de production automatisées
+
+## Technologies spécifiques par domaine
+
+### Automotive
+- Diagnostics : KWP2000, UDS, DoIP
+- Systèmes ADAS : capteurs radar, lidar, caméras
+- Infotainment : Android Automotive, QNX Car
+- Électrification : BMS, convertisseurs DC/DC et AC/DC
+
+### Télécommunications
+- Technologies réseau : SDN, NFV
+- Communications par satellite : VSAT, DVB-S/S2
+- Réseaux mobiles : 4G/5G, IMS
+- Cybersécurité : PKI, cryptographie, VPN
+
+### IoT et Systèmes Connectés
+- Plateformes IoT : ThingsBoard, AWS IoT
+- Passerelles IoT industrielles
+- Edge computing pour l'analyse en temps réel
+- Jumeaux numériques

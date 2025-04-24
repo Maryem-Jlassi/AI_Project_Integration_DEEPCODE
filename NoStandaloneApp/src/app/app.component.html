@@ -1,0 +1,73 @@
+<div class="app-container">
+
+    <header class="elementor-container elementor-column-gap-wide">
+      <!-- Logo ACTIA -->
+      <h1>Chatbot ACTIA</h1>
+
+      <div class="elementor-column elementor-col-33 elementor-top-column">
+        <div class="elementor-widget-wrap">
+          <div class="wpr-logo elementor-clearfix">
+            <picture class="wpr-logo-image">
+              <source media="(max-width: 767px)" srcset="https://www.actia.com/wp-content/uploads/2024/03/Logo-menu-actia.png">  
+              <source srcset="https://www.actia.com/wp-content/uploads/2024/03/Logo-menu-actia.png 1x, https://www.actia.com/wp-content/uploads/2024/03/Logo-menu-actia.png 2x">  
+              <img src="https://www.actia.com/wp-content/uploads/2024/03/Logo-menu-actia.png" alt="Logo ACTIA">
+            </picture>
+            <a class="wpr-logo-url" rel="home" href="https://www.actia.com/"></a>
+          </div>
+        </div>
+      </div>
+    
+      <!-- Menu principal ACTIA -->
+      <div class="elementor-column elementor-col-66 elementor-top-column">
+        <nav class="wpr-nav-menu-container wpr-nav-menu-horizontal">
+          <ul class="wpr-nav-menu">
+            <li><a href="https://www.actia.com/" class="wpr-menu-item">Accueil</a></li>
+            <li class="menu-item-has-children">
+              <a href="#" class="wpr-menu-item">Le groupe</a>
+              <ul class="sub-menu">
+                <li><a href="https://www.actia.com/le-groupe/identite-et-piliers/">Identité et Piliers</a></li>
+                <li><a href="https://www.actia.com/le-groupe/activites/">Activités</a></li>
+                <li><a href="https://www.actia.com/le-groupe/engagements-en-developpement-durable/">Développement Durable</a></li>
+                <li><a href="https://www.actia.com/le-groupe/implantations/">Implantations</a></li>
+                <li><a href="https://investors.actia.com/gouvernance/" target="_blank">Gouvernance</a></li>
+                <li><a href="https://www.actia.com/le-groupe/notre-histoire/">Notre histoire</a></li>
+              </ul>
+            </li>
+            <li class="menu-item-has-children">
+              <a href="#" class="wpr-menu-item">Les divisions</a>
+              <ul class="sub-menu">
+                <li><a href="https://www.actia.com/mobilite-terrestre/">Mobility</a></li>
+                <li><a href="https://www.actia.com/les-divisions/aeronautique-spatial/">Aerospace</a></li>
+                <li><a href="https://www.actia.com/les-divisions/energie/">Energy</a></li>
+                <li><a href="https://www.actia.com/les-divisions/services-dingenierie/">Engineering Services</a></li>
+              </ul>
+            </li>
+            <li><a href="https://www.actia.com/newsroom/actualites/" class="wpr-menu-item">Actualités</a></li>
+            <li><a href="https://www.actia.com/carrieres/" class="wpr-menu-item">Carrières</a></li>
+            <li><a href="https://investors.actia.com/" class="wpr-menu-item" target="_blank">Investisseurs</a></li>
+          </ul>
+        </nav>
+      </div>
+    
+  </header>
+  <main>
+    <app-chat *ngIf="isChatOpen" class="chat-popup">
+
+
+        <!-- Logo à l'intérieur de la bulle de chat -->
+    <div class="chat-header">
+      <h2>Chatbot ACTIA</h2>
+    </div>
+    </app-chat>
+  
+  
+    <button class="chat-toggle-button" (click)="toggleChat()">
+      <img src="https://www.actia.com/wp-content/uploads/2024/03/Logo-menu-actia.png" alt="Logo ACTIA">
+      <i class="fas fa-comment-dots"></i>
+    </button>
+  </main>
+  
+  <footer>
+    <p>© 2025 ACTIA - Tous droits réservés</p>
+  </footer>
+</div>
