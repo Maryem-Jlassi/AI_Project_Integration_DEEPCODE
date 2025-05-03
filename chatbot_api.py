@@ -36,6 +36,8 @@ from crewai import Agent, Task, Crew, Process
 from crewai.tools import BaseTool
 from langchain_community.tools import DuckDuckGoSearchRun  # Updated import
 from typing import Any, Optional
+import langdetect
+import concurrent.futures
 
 
 
@@ -125,7 +127,7 @@ def setup_agents():
         role="Engineering Interview Preparer",
         goal="Préparer les candidats aux entretiens techniques d'ingénierie",
         backstory="Je suis un expert en entretiens techniques avec une vaste expérience dans le domaine de l'ingénierie. J'aide les candidats à se préparer aux questions techniques, à comprendre les algorithmes et structures de données, et à améliorer leurs compétences en résolution de problèmes.",
-        verbose=True,
+        verbose=False,
         allow_delegation=True,
         tools=[search_tool]
     )
@@ -134,7 +136,7 @@ def setup_agents():
         role="Resume Strategist",
         goal="Optimiser les CV pour maximiser l'impact et les chances de décrocher un entretien",
         backstory="Je suis un expert en création et optimisation de CV avec une profonde connaissance des attentes des recruteurs dans le domaine technique. J'aide les candidats à mettre en valeur leurs compétences et expériences pertinentes.",
-        verbose=True,
+        verbose=False,
         allow_delegation=True,
         tools=[search_tool]
     )
@@ -143,7 +145,7 @@ def setup_agents():
         role="HR Policies Expert",
         goal="Fournir des informations précises sur les politiques RH d'ACTIA",
         backstory="Je suis un expert des politiques RH d'ACTIA avec une connaissance approfondie du manuel de l'employé, des avantages sociaux et des procédures internes.",
-        verbose=True,
+        verbose=False,
         allow_delegation=True,
         tools=[search_tool]
     )
@@ -152,7 +154,7 @@ def setup_agents():
         role="Career Path Advisor",
         goal="Conseiller sur les parcours professionnels et opportunités d'évolution chez ACTIA",
         backstory="Je suis un conseiller en développement de carrière spécialisé dans l'industrie automobile et les technologies embarquées. J'aide les employés à identifier les opportunités d'évolution au sein d'ACTIA.",
-        verbose=True,
+        verbose=False,
         allow_delegation=True,
         tools=[search_tool]
     )
@@ -251,7 +253,7 @@ async def process_with_crew_ai(query):
         crew = Crew(
             agents=[agent],
             tasks=[task],
-            verbose=True,
+            verbose=False,
             process=Process.sequential  # ou Process.hierarchical selon le besoin
         )
         
@@ -380,7 +382,7 @@ def create_faiss_index(chunks):
     return index, chunks
 
 # Fonction de récupération optimisée
-def retrieve_relevant_chunks(query, k=5):  # Augmenter le nombre de chunks de 3 à 5
+def retrieve_relevant_chunks(query, k=3):  # Augmenter le nombre de chunks de 3 à 5
     docs, index = get_documents_and_faiss_index()
     embedder = get_embedder()
     
@@ -419,28 +421,34 @@ def update_faiss_index(new_chunks):
         return index
 
 def build_rag_prompt(query, relevant_chunks):
-    # Réduire la taille du contexte pour accélérer la génération
-    # Limiter à 2 sources les plus pertinentes
-    context = "\n\n".join(relevant_chunks[:2])
+    context = "\n\n".join(relevant_chunks[:1])  # 1 chunk seulement
+    model_name =   "llama3:latest"
+    
+    lang = detect_language(query)
+    if lang == "en":
+        system_prompt = "You are a friendly HR assistant for ACTIA. Always answer in English, directly and concisely."
+    else:
+        system_prompt = """Vous êtes un assistant RH convivial pour ACTIA. 
+        
+        Directives pour vos réponses:
+        1. Répondez DIRECTEMENT et PRÉCISÉMENT à la question posée
+        2. Adressez-vous à l'utilisateur de façon chaleureuse et directe
+        3. Ne déviez pas vers des sujets connexes mais différents
+        4. Évitez les formulations qui sonnent comme des listes ou des énumérations
+        5. Ne dites pas "Selon le contexte" ou "D'après les informations"
+        6. Ne commencez pas par des phrases comme "Voici les informations" ou "Je peux vous dire que"
+        7. Répondez de manière concise (2-4 phrases) mais conversationnelle
+        8. Si le contexte ne contient pas la réponse à la question spécifique posée, indiquez-le clairement
+        9. Restez strictement focalisé sur la question posée
+        10. Intégrez naturellement l'information dans une réponse fluide
+        11. si une question est posée en anglais, répondez en anglais
+        
+        Utilisez le contexte fourni pour répondre précisément, mais formulez votre réponse comme si vous parliez directement à un collègue."""
     return {
-        "model": "llama3:latest",
-        "stream": False,
+        "model": model_name,
+        "stream": True,
         "messages": [
-            {"role": "system", "content": """Vous êtes un assistant RH convivial pour ACTIA. 
-            
-            Directives pour vos réponses:
-            1. Répondez DIRECTEMENT et PRÉCISÉMENT à la question posée
-            2. Adressez-vous à l'utilisateur de façon chaleureuse et directe
-            3. Ne déviez pas vers des sujets connexes mais différents
-            4. Évitez les formulations qui sonnent comme des listes ou des énumérations
-            5. Ne dites pas "Selon le contexte" ou "D'après les informations"
-            6. Ne commencez pas par des phrases comme "Voici les informations" ou "Je peux vous dire que"
-            7. Répondez de manière concise (2-4 phrases) mais conversationnelle
-            8. Si le contexte ne contient pas la réponse à la question spécifique posée, indiquez-le clairement
-            9. Restez strictement focalisé sur la question posée
-            10. Intégrez naturellement l'information dans une réponse fluide
-            
-            Utilisez le contexte fourni pour répondre précisément, mais formulez votre réponse comme si vous parliez directement à un collègue."""},
+            {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Contexte: {context}\n\nQuestion: {query}"}
         ]
     }
@@ -482,7 +490,11 @@ async def startup_event():
     # Initialiser uniquement l'index FAISS et les documents au démarrage
     # Les autres modèles seront chargés à la demande
     try:
+        get_agents()  # Force la création des agents CrewAI
         get_documents_and_faiss_index()
+        get_embedder()  # Charger le modèle d'embedding
+        get_whisper_model()  # Charger Whisper
+        get_bert_model()  # Charger BERT
     except Exception as e:
         logger.error(f"Erreur d'initialisation: {e}")
 
@@ -493,49 +505,67 @@ async def root():
 @app.post("/query", response_model=RagResponse)
 async def process_query(request: QueryRequest):
     start_time = time.time()
-    query = request.query
-    
-    if not query:
-        raise HTTPException(status_code=400, detail="La requête ne peut pas être vide")
-    
-    # Essayer d'abord de traiter avec Crew AI
-    crew_ai_response = await process_with_crew_ai(query)
-    
-    # Si Crew AI a pu traiter la requête, retourner sa réponse
-    if crew_ai_response:
-        return RagResponse(**crew_ai_response)
-    
-    # Sinon, utiliser le système RAG existant
-    # Récupération des chunks pertinents
-    relevant_chunks = retrieve_relevant_chunks(query)
-    
-    if not relevant_chunks:
+    query = request.query.strip()
+
+    if query.strip().lower() in ["bonjour", "salut", "hello", "hi", "actibot", "hola"]:
         elapsed_time = time.time() - start_time
         return RagResponse(
-            answer="Désolé, je n'ai pas trouvé d'informations pertinentes. Pouvez-vous reformuler votre question ?",
+            answer="Bonjour c'est actibot ! Comment puis-je vous aider ?",
             sources=[],
             processing_time=f"{elapsed_time:.2f}s"
         )
-    
-    # Construction du prompt RAG
-    prompt = build_rag_prompt(query, relevant_chunks)
-    
-    try:
-        # Appel à Ollama
-        response = ollama.chat(**prompt)
-        answer = response['message']['content']
-        
+
+    if not query:
+        raise HTTPException(status_code=400, detail="La requête ne peut pas être vide")
+
+    # 1. CrewAI
+    crew_ai_response = await process_with_crew_ai(query)
+    if crew_ai_response:
+        return RagResponse(**crew_ai_response)
+
+    # 2. RAG
+    relevant_chunks = retrieve_relevant_chunks(query, k=1)
+    if not relevant_chunks:
         elapsed_time = time.time() - start_time
-        logger.info(f"Temps de traitement: {elapsed_time:.2f} secondes")
-        
         return RagResponse(
-            answer=answer,
-            sources=relevant_chunks[:3],  # Retourner les sources utilisées
+            answer="Aucune information pertinente trouvée.",
+            sources=[],
             processing_time=f"{elapsed_time:.2f}s"
         )
+
+    prompt = build_rag_prompt(query, relevant_chunks)
+
+    # 3. Appel à Ollama dans un thread pour ne pas bloquer
+    try:
+        ollama_start = time.time()
+
+        if prompt.get("stream", False):
+            def run_stream():
+                return list(ollama.chat(**prompt))
+
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(run_stream)
+                response_chunks = future.result()
+                answer = "".join(chunk["message"]["content"] for chunk in response_chunks if "message" in chunk)
+        else:
+            response = ollama.chat(**prompt)
+            answer = response["message"]["content"]
+
+        elapsed_time = time.time() - start_time
+        ollama_duration = time.time() - ollama_start
+
+        logger.info(f"⏱ Temps total: {elapsed_time:.2f}s (ollama: {ollama_duration:.2f}s)")
+
+        return RagResponse(
+            answer=answer,
+            sources=relevant_chunks[:3],
+            processing_time=f"{elapsed_time:.2f}s"
+        )
+
     except Exception as e:
-        logger.error(f"Erreur lors de l'appel à Ollama: {e}")
-        raise HTTPException(status_code=500, detail=f"Erreur de génération: {str(e)}")
+        logger.error(f"Erreur ollama: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 # Ajoutez également une modification similaire à la route process_audio_query
 @app.post("/query/audio", response_model=RagResponse)
@@ -736,7 +766,7 @@ async def query_specific_agent(request: AgentRequest):
         crew = Crew(
             agents=[agent],
             tasks=[task],
-            verbose=True,
+            verbose=False,
             process=Process.sequential
         )
         
@@ -798,6 +828,12 @@ def chunk_text(text, max_length=500):
 def save_faiss_index(index, filename=FAISS_INDEX_PATH):
     with index_lock:
         faiss.write_index(index, filename)
+
+def detect_language(text):
+    try:
+        return langdetect.detect(text)
+    except:
+        return "fr"
 
 if __name__ == "__main__":
     uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)

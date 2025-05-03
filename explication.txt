@@ -1,0 +1,29 @@
+explication:
+
+
+Fine-tuning de BERT :
+
+Ton modèle BERT est fine-tuné sur un dataset constitué de fichiers PDF, CSV et TXT, dont les contenus sont extraits et stockés sous forme de texte brut:  j'utilises BertForSequenceClassification pour fine-tuner BERT pour une tâche de classification de texte en ajoutant une couche de classification à la fin pour effectuer une tâche de classification binaire, utilises l'outil Trainer de la bibliothèque transformers pour entraîner le modèle sur ton jeu de données. Pendant cet entraînement, le modèle apprend à adapter ses représentations du texte pour la tâche spécifique
+
+Indexation avec FAISS :
+
+Les documents (PDF, TXT, CSV) sont segmentés en chunks et stockés dans FAISS après génération des embeddings avec all-MiniLM-L6-v2.
+
+Lorsqu'une question est posée, elle est convertie en embedding et comparée aux embeddings des chunks dans FAISS pour récupérer les plus pertinents.
+
+Comparaison et récupération des chunks :
+
+À chaque requête utilisateur, on associe les chunks les plus pertinents extraits depuis FAISS à l'aide de la recherche vectorielle.
+
+Ces chunks servent de contexte pour générer une réponse en utilisant la technique RAG (Retrieval-Augmented Generation).
+
+Génération de la réponse avec RAG :
+
+Si FAISS trouve des chunks pertinents, ils sont utilisés comme contexte dans un prompt pour Ollama (qui exécute un modèle génératif).
+
+Si les chunks ne sont pas assez pertinents ou absents, la réponse risque d'être floue.
+
+
+
+
+l'utilisateur kol ma ys2l une question , l question hdhi elle va etre convertie en embedding  kif kif les doccuments sont segmentés en chunks apres la generation de leurs embedings w les chunks des doccuments sont stockes dans faiss ? MBA3D ON VA FAIRE LA comparaison entre les embeddings  des questions et les chunks des embeddings des doccuments pour trouvers les chunks les plus pertinent a l'aide de la recherche vectorielle  Ici intervient le modele BERT qui sert comme un filtre intelligent qui garantit que seuls les info pertinantes sont trasmises au modele de generation j'ai appliqué un fine tuning pour BERT donc j'utilises l'outil Trainer de la bibliothèque transformers pour entraîner le modèle sur ton jeu de données. Pendant cet entraînement, le modèle apprend à adapter ses représentations du texte pour la tâche spécifique
