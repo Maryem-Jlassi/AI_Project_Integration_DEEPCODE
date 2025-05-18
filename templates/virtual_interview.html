@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Virtual Technical Interview System for Recruitment">
+    <title>Virtual Technical Interview</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --green-dark: #28745c;
+            --green-medium: #3a9778;
+            --green-light: #d4f3ea;
+            --gray-dark: #3c4048;
+            --gray-medium: #606671;
+            --gray-light: #e9ecef;
+            --white: #ffffff;
+            --interviewer-primary: #28745c;
+            --interviewer-secondary: #1a5440;
+            --interviewer-accent: #d4f3ea;
+            --candidate-primary: #3c4048;
+            --candidate-secondary: #252930;
+            --candidate-accent: #e9ecef;
+            --success: #5cb85c;
+            --warning: #f0ad4e;
+            --danger: #d9534f;
+            --info: #5bc0de;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #000;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .interview-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0a0a0a;
+            z-index: 1000;
+            overflow: hidden;
+            display: flex;
+        }
+        .interview-main-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+        }
+        .interview-header {
+            padding: 0.75rem 1.25rem;
+            background-color: var(--gray-dark);
+            color: var(--white);
+            z-index: 10;
+        }
+        .recording-indicator {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #f8f8f8;
+            background-color: rgba(255, 0, 0, 0.7);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+        .interview-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        .video-area-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #080808;
+            padding: 1rem;
+        }
+        .video-row {
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            flex: 1;
+        }
+        .video-container {
+            flex: 1;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #111;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            height: 100%;
+        }
+        .recruiter-container {
+            border: 2px solid var(--interviewer-primary);
+        }
+        .candidate-container {
+            border: 2px solid var(--candidate-primary);
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .candidate-video, .interviewer-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+            z-index: 10;
+        }
+        .participant-info {
+            display: flex;
+            flex-direction: column;
+            color: white;
+        }
+        .participant-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .participant-role {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+        .video-controls {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+        .audio-indicator {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .audio-indicator.active {
+            background-color: rgba(92, 184, 92, 0.7);
+        }
+        .audio-indicator.muted {
+            background-color: rgba(217, 83, 79, 0.7);
+        }
+        .interaction-area {
+            width: 350px;
+            background-color: var(--white);
+            border-left: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+        .conversation-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding: 1rem;
+        }
+        .conversation {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: var(--gray-light);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            min-height: 120px;
+            max-height: 60vh;
+        }
+        .message {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+            max-width: 85%;
+        }
+        .message.interviewer {
+            background-color: var(--green-light);
+            margin-right: auto;
+            word-break: break-word;
+            white-space: pre-line;
+        }
+        .message.candidate {
+            background-color: var(--gray-light);
+            border: 1px solid #ccc;
+            margin-left: auto;
+        }
+        .message.system {
+            background-color: var(--info);
+            color: var(--white);
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            font-style: italic;
+            max-width: 90%;
+            opacity: 0.9;
+        }
+        .chat-input {
+            padding: 1rem;
+            border-top: 1px solid #ddd;
+            background-color: var(--white);
+        }
+        .interview-controls {
+            padding: 0.75rem;
+            background-color: var(--gray-dark);
+            border-top: 1px solid #222;
+        }
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        .control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: none;
+            border: none;
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .control-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+        .control-btn i {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+        .control-btn-danger {
+            color: var(--danger);
+        }
+        .control-btn-danger:hover {
+            background-color: rgba(217, 83, 79, 0.2);
+        }
+        .control-btn.active {
+            color: var(--success);
+        }
+        .control-btn.muted {
+            color: var(--danger);
+        }
+        .btn-green-dark {
+            background-color: var(--green-dark);
+            color: white;
+            border-color: var(--green-dark);
+        }
+        .btn-green-dark:hover {
+            background-color: var(--interviewer-secondary);
+            color: white;
+            border-color: var(--interviewer-secondary);
+        }
+        @media (max-width: 992px) {
+            .interview-body {
+                flex-direction: column;
+            }
+            .video-area-container {
+                flex: none;
+                height: 50vh;
+            }
+            .interaction-area {
+                width: 100%;
+                height: 50vh;
+            }
+        }
+        @media (max-width: 768px) {
+            .video-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            .video-area-container {
+                padding: 0.5rem;
+                height: 45vh;
+            }
+            .interaction-area {
+                height: 55vh;
+            }
+            .control-buttons {
+                flex-wrap: wrap;
+            }
+            .control-btn {
+                padding: 0.4rem 0.75rem;
+            }
+        }
+        @media (max-width: 576px) {
+            .interview-header {
+                padding: 0.5rem 0.75rem;
+            }
+            .interview-header h2 {
+                font-size: 0.9rem;
+            }
+            .recording-indicator {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.4rem;
+                margin-right: 0.5rem;
+            }
+            .control-btn span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Interview page -->
+    <div id="interview-screen" class="interview-screen">
+        <div class="interview-main-container">
+            <div class="interview-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <div class="recording-indicator" aria-live="polite">
+                        <div class="recording-dot"></div>
+                        <span>LIVE</span>
+                    </div>
+                    <h2 class="mb-0 h5 text-white" id="jobTitleHeader">Interview for Software Developer</h2>
+                </div>
+                <div class="header-controls d-flex align-items-center">
+                    <span class="text-white me-3"><i class="bi bi-person me-1"></i> <span class="user-info" id="headerCandidateName">Candidate</span></span>
+                    <button class="btn btn-sm btn-danger ms-2" id="endCallBtnHeader" aria-label="End call">
+                        <i class="bi bi-telephone-x"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="interview-body">
+                <div class="video-area-container">
+                    <div class="video-row">
+                        <!-- Interviewer Video/Image Container -->
+                        <div class="video-container recruiter-container">
+                            <div class="video-wrapper">
+                                <video id="interviewer-video" class="candidate-video" autoplay playsinline aria-label="Interviewer video" style="display: none;"></video>
+                                <img id="interviewer-image" class="interviewer-image" src="/static/images/photo.jpg" alt="Interviewer image" style="display: block;">
+                                <div class="video-overlay">
+                                    <div class="participant-info">
+                                        <span class="participant-name">Alex</span>
+                                        <span class="participant-role">Virtual Interviewer</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video-controls">
+                                <div class="audio-indicator" id="interviewerAudioIndicator" aria-label="Interviewer audio muted">
+                                    <i class="bi bi-volume-mute-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Candidate Video Container -->
+                        <div class="video-container candidate-container">
+                            <div class="video-wrapper">
+                                <video id="local-video" class="candidate-video" autoplay muted playsinline aria-label="Your video"></video>
+                                <div class="video-overlay">
+                                    <div class="participant-info">
+                                        <span class="participant-name user-info" id="videoOverlayCandidateName">Candidate</span>
+                                        <span class="participant-role">Candidate</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="video-controls">
+                                <div class="audio-indicator" id="candidateAudioIndicator" aria-label="Your audio muted">
+                                    <i class="bi bi-mic-mute-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="interaction-area">
+                    <div class="conversation-container">
+                        <div id="chat-messages" class="conversation" aria-live="polite"></div>
+                        <div class="chat-input">
+                            <div class="d-flex align-items-center">
+                                <input type="text" id="text-input" class="form-control me-2" placeholder="Type your response..." aria-label="Type your response">
+                                <button id="send-text" class="btn btn-green-dark" aria-label="Send response">
+                                    <i class="bi bi-send"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interview-controls">
+                <div class="control-buttons">
+                    <button class="control-btn" id="toggle-video" aria-label="Toggle camera">
+                        <i class="bi bi-camera-video-off-fill"></i> <span>Camera</span>
+                    </button>
+                    <button class="control-btn" id="toggle-audio" aria-label="Toggle microphone">
+                        <i class="bi bi-mic-mute-fill"></i> <span>Microphone</span>
+                    </button>
+                    <button class="control-btn control-btn-danger" id="endBtn" aria-label="End interview">
+                        <i class="bi bi-telephone-x-fill"></i> <span>End</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interview finished page -->
+    <div id="interview-finished-page" class="d-none">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-body text-center p-5">
+                            <h1 class="mb-4">Interview Completed</h1>
+                            <p class="lead mb-4">Thank you for participating in this virtual interview.</p>
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                                <button id="startNewInterviewBtn" class="btn btn-primary">Start New Interview</button>
+                                <button id="returnHomeBtn" class="btn btn-outline-secondary">Return to Home</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio element for interviewer's speech -->
+    <audio id="interviewer-audio" style="display: none;"></audio>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/virtual_interview.js') }}"></script>
+</body>
+</html>

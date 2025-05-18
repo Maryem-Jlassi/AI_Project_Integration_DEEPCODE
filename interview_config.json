@@ -1,0 +1,83 @@
+{
+    "interview_settings": {
+        "max_questions": 5,
+        "time_limit_minutes": 30,
+        "difficulty_progression": true,
+        "allow_written_responses": true,
+        "company_name": "ACTIA",
+        "position_types": [
+            "Stage",
+            "CDI",
+            "CDD"
+        ],
+        "locations": [
+            "Toulouse",
+            "Paris",
+            "Lyon"
+        ]
+    },
+    "technical_domains": {
+        "python": {
+            "weight": 0.4,
+            "required": true,
+            "min_questions": 2
+        },
+        "machine_learning": {
+            "weight": 0.3,
+            "required": false,
+            "min_questions": 1
+        },
+        "algorithms": {
+            "weight": 0.3,
+            "required": true,
+            "min_questions": 1
+        }
+    },
+    "voice_settings": {
+        "language": "fr-FR",
+        "silence_threshold": 2.0,
+        "timeout": 30,
+        "allow_voice_input": true
+    },
+    "evaluation_criteria": {
+        "technical_knowledge": {
+            "weight": 0.4,
+            "threshold": 0.6
+        },
+        "problem_solving": {
+            "weight": 0.3,
+            "threshold": 0.5
+        },
+        "communication": {
+            "weight": 0.2,
+            "threshold": 0.6
+        },
+        "reasoning": {
+            "weight": 0.1,
+            "threshold": 0.5
+        }
+    },
+    "company_info": {
+        "name": "ACTIA",
+        "description": "Leader en systèmes embarqués électroniques",
+        "values": [
+            "Innovation",
+            "Excellence technique",
+            "Travail d'équipe",
+            "Développement durable"
+        ],
+        "benefits": [
+            "RTT",
+            "Mutuelle d'entreprise",
+            "Plan d'épargne",
+            "Formation continue",
+            "Télétravail partiel"
+        ],
+        "salary_ranges": {
+            "stage": "1000-1500€",
+            "junior": "35-45k€",
+            "confirme": "45-65k€",
+            "senior": "65k€+"
+        }
+    }
+}

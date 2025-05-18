@@ -1,0 +1,7 @@
+avatar4/
+    __init__.py         # Makes 'avatar3' a package
+    interviewer.py      # Contains AITechnicalInterviewer class
+    models.py           # Contains model loading and configuration
+    knowledge_base.py   # Contains knowledge base loading and question generation
+    speech.py           # Contains speech synthesis and recognition logic
+    evaluation.py       # Contains response evaluation logic

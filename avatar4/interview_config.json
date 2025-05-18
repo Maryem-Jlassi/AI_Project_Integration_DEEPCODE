@@ -1,0 +1,7 @@
+{
+    "tts_rate": 150,
+    "tts_volume": 0.9,
+    "tts_voice_name": "David",
+    "speech_recognition_language": "en-US",
+    "num_technical_questions": 3
+}
