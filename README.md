@@ -56,7 +56,6 @@ Home Page :
 *   **Backend**: Python, Flask, Flask-SocketIO
 ---
 
-## Acknowledgments
 
 This project was developed by DEEPCODE TEAM at **Esprit School of Engineering**.
 
