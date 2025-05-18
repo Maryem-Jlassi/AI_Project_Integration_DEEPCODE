@@ -7,9 +7,8 @@ A comprehensive full-stack platform for HR professionals to manage recruitment, 
 This project was developed to explore advanced HR technology solutions at **Esprit School of Engineering**. It aims to streamline the entire candidate lifecycle by integrating an admin dashboard, a chatbot assistant to answer candidates queries, automated communications, and an AI virtual interviewer. The platform emphasizes efficiency and data-driven insights for modern recruitment.
 
 ---
+Home Page :
 ![Platform Overview](screenshots/homepage.png)
-`![Platform Overview](placeholder_platform_overview_collage.png)`
-
 ---
 
 ## Features
@@ -26,7 +25,7 @@ This project was developed to explore advanced HR technology solutions at **Espr
 
 *   **Chatbot**:
     *   Provides instant 24/7 responses to applicant queries regarding job details, company information, and application status.
-        ![Chatbot Interaction](screenshots/chatbot_assistant.png)
+        ![Chatbot Interaction](screenshots/chatbot.png)
 
 
 * **Candidate Dashboard**:
